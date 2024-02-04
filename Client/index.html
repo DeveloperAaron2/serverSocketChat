@@ -95,6 +95,7 @@
                 console.log(`current user: ${username}`)
                 return username
             }
+
             const res = await fetch('https://random-data-api.com/api/users/random_user')
             const { username: randomUserName } = await res.json()
 
@@ -104,18 +105,19 @@
 
         const socket = io({
             auth: {
-                serverOffset: 0,
-                username: await getUsername()
+                username: await getUsername(),
+                serverOffset: 0
             }
         })
+
         const form = document.getElementById('form')
         const input = document.getElementById('input')
         const messages = document.getElementById('messages')
 
-        socket.on('chat message', (msg, serverOffset) => {
+        socket.on('chat message', (msg, serverOffset, username) => {
             const item = `<li>
                 <p>${msg}</p>
-                <small>${socket.auth.username}</small>
+                <small>${username}</small>
             </li>`
             messages.insertAdjacentHTML('beforeend', item)
             socket.auth.serverOffset = serverOffset
@@ -124,7 +126,7 @@
             e.preventDefault()
 
             if(input.value){
-                socket.emit('chat message', input.value, socket.auth.username)
+                socket.emit('chat message', input.value)
                 input.value = ''
             }
         })

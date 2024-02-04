@@ -15,7 +15,7 @@ const io = new Server(server, {
   }
 })
 const db = createClient({
-  url: 'libsql://uncommon-punisher-developeraaron2.turso.io',
+  url: process.env.DB_URL,
   authToken: process.env.DB_TOKEN
 })
 await db.execute(`
